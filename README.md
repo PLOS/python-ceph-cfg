@@ -21,12 +21,19 @@ For the original use case of salt configuration of ceph a making this module a
 stand alone library helps reuse of code for the execution and state functions
 without excessive state rediscovery.
 
-Installation
+Package Creation
 ------------
+
+Prerequisite packages from a normal ubuntu install:
+  * python3-stdeb
+  * python3-setuptools
+  * debhelper
+  * python3-all
+  * python-all
 
 This library makes use of standard setuptools functionality.
 
-    python setup.py install
+    python3 setup.py --command-packages=stdeb.command sdist_dsc --with-python2=True --with-python3=True --no-python2-scripts=True bdist_deb
 
 Code layout
 -----------
@@ -60,13 +67,4 @@ Each test can be indevidually run an example is shown here:
 
     py.test ceph_cfg/tests/test_utils_is_valid_base64.py 
 
-Submitting Patches
-------------------
-Please add test cases to cover any code you add. You can test your changes
-by running ``tox`` (You will also need ``mock`` and ``pytest`` ) from inside
-the git clone
-
-When creating a commit message please use ``git commit -s`` or otherwise add
-``Signed-off-by: Your Name <email@address.dom>`` to your commit message.
-
-Patches can then be submitted by a pull request on GitHub.
+For packaging purposes we are currently turning off tox

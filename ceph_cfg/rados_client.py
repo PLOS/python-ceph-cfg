@@ -40,7 +40,7 @@ class ctrl_rados_client(object):
         self.ceph_client_id = kwargs.get("name")
         self.service_name = None
         self.model = model.model(**kwargs)
-        self.model.init = "systemd"
+        self.model.init = "sysV"
         self.bootstrap_keyring_type = None
         self.keyring_service_capabilities = None
         self.keyring_service_path = None

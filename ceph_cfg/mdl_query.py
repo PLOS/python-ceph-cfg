@@ -25,7 +25,7 @@ class mdl_query():
     """
     def __init__(self, model):
         self.model = model
-        self.model.init = "sysV"
+        self.model.init = utils.detect_init_system()
 
 
     def mon_quorum(self):

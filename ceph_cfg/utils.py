@@ -4,6 +4,8 @@ import logging
 import os
 import base64
 import binascii
+import subprocess
+import platform
 
 # local modules
 from . util_configparser import ConfigParserCeph as ConfigParser
@@ -87,3 +89,32 @@ def is_valid_base64(s):
         base64.decodestring(s)
     except binascii.Error:
         raise Error("invalid base64 string supplied %s" % s)
+
+def detect_init_system_dangerous():
+    init = none
+    UpstartCheck, UpstartCheck_err = subprocess.Popen(["/sbin/init", "--version"], stderr=subprocess.PIPE, stdout=subprocess.PIPE).communicate() 
+    SystemctlCheck, SystemctlCheck_err = subprocess.Popen("systemctl", stderr=subprocess.PIPE, stdout=subprocess.PIPE).communicate()
+    if "upstart" in UpstartCheck and not UpstartCheck_err:
+        init = "upstart"
+    elif "mount" in SystemctlCheck and not SystemctlCheck_err:
+        init = "systemd"
+    elif os.path.isfile("/etc/init.d/cron") and not os.path.islink("/etc/init.d/cron"):
+        init = "sysV"
+    else:
+        raise ValueError('dont know what init it is')
+    return init
+
+def detect_init_system():
+    init = none
+    distro, version, code_id = platform.linux_distribution() 
+    if "Ubuntu".upper() in distro.upper() and version > 14.04:
+        init = "systemd"
+    elif "Ubuntu".upper() in distro.upper() and version <= 14.04 and version >= 10.04:
+        init = "upstart"
+    elif "Ubuntu".upper() in distro.upper() and version < 10.04:
+        init = "sysV"
+    elif "Suse Linux Enterprise Server".upper() in distro.upper() and version > 11:
+        init = "systemd"
+    else:
+        raise ValueError("better than erroring out complaining about systemctl")
+    return init

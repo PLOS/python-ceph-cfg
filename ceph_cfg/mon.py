@@ -50,7 +50,7 @@ class ErrorNotMon(Error):
 class mon_implementation_base(object):
     def __init__(self, mdl):
         self.model = mdl
-        self.model.init = "sysV"
+        self.model.init = utils.detect_init_system()
         self.init_system = service.init_system(init_type=self.model.init)
 
 

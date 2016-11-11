@@ -29,7 +29,7 @@ class Error(Exception):
 class osd_ctrl(object):
     def __init__(self, mdl):
         self.model = mdl
-        self.model.init = "sysV"
+        self.model.init = utils.detect_init_system()
 
 
     def _get_dev_name(self, path):

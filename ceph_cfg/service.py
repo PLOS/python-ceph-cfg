@@ -10,7 +10,7 @@ from . import util_which
 log = logging.getLogger(__name__)
 
 
-init_types_available = set([ "systemd" , "sysV"])
+init_types_available = set([ "systemd" , "sysV", "ubuntu_sysV"])
 
 
 def Property(func):
@@ -106,6 +106,8 @@ class init_system(object):
     def on_boot_disable(self, **kwargs):
         self._check_properties()
         return self._init_type_implementation.on_boot_disable(**kwargs)
+   
+    def 
 
 class init_system_systemd():
 
@@ -291,6 +293,76 @@ class init_system_sysV():
         service_name = self._get_sysvinit_name(**kwargs)
         arguments = [
                     'chkconfig',
+                    service_name,
+                    'status'
+            ]
+        utils.execute_local_command(arguments)
+
+class init_system_ubuntu_sysV():
+    # TODO: this is largely untested
+
+
+
+    def _get_sysvinit_name(self, **kwargs):
+        service = kwargs.get("service")
+        if service == None:
+            raise init_exception("service is None")
+        return service
+
+
+    def start(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                'service',
+                service_name,
+                'start'
+            ]
+        utils.execute_local_command(arguments)
+
+
+    def stop(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                'service',
+                service_name,
+                'stop'
+            ]
+        utils.execute_local_command(arguments)
+
+
+    def restart(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                'service',
+                service_name,
+                'restart'
+            ]
+        utils.execute_local_command(arguments)
+
+
+    def on_boot_enable(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                    'update-rc.d',
+                    service_name,
+                    'enable'
+            ]
+        utils.execute_local_command(arguments)
+
+
+    def on_boot_disable(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                    'update-rc.d',
+                    service_name,
+                    'disable'
+            ]
+        utils.execute_local_command(arguments)
+
+    def is_running(self, **kwargs):
+        service_name = self._get_sysvinit_name(**kwargs)
+        arguments = [
+                    'service',
                     service_name,
                     'status'
             ]

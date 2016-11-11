@@ -59,7 +59,7 @@ class init_system(object):
                 raise init_exception_init_type("Invalid Value:%s" % (name))
             self._init_type_name = name
             init_implementation = {'systemd' : init_system_systemd,
-                'message' : init_system_sysV,
+                'message' : init_system_sysV, 'ubuntu_sysV' : init_system_ubuntu_sysV
             }
             new_implementation = init_implementation[name]()
             self._init_type_implementation = new_implementation

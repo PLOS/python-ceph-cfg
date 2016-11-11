@@ -95,7 +95,7 @@ def detect_init_system_dangerous():
     UpstartCheck, UpstartCheck_err = subprocess.Popen(["/sbin/init", "--version"], stderr=subprocess.PIPE, stdout=subprocess.PIPE).communicate() 
     SystemctlCheck, SystemctlCheck_err = subprocess.Popen("systemctl", stderr=subprocess.PIPE, stdout=subprocess.PIPE).communicate()
     if "upstart" in UpstartCheck and not UpstartCheck_err:
-        init = "upstart"
+        init = "ubuntu_sysV"
     elif "mount" in SystemctlCheck and not SystemctlCheck_err:
         init = "systemd"
     elif os.path.isfile("/etc/init.d/cron") and not os.path.islink("/etc/init.d/cron"):
@@ -110,11 +110,12 @@ def detect_init_system():
     if "Ubuntu".upper() in distro.upper() and version > 14.04:
         init = "systemd"
     elif "Ubuntu".upper() in distro.upper() and version <= 14.04 and version >= 10.04:
-        init = "upstart"
+        init = "ubuntu_sysV"
     elif "Ubuntu".upper() in distro.upper() and version < 10.04:
         init = "sysV"
     elif "Suse Linux Enterprise Server".upper() in distro.upper() and version > 11:
         init = "systemd"
+# please add other linux distros and associated init
     else:
         raise ValueError("better than erroring out complaining about systemctl")
     return init

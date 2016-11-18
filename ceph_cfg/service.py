@@ -107,7 +107,6 @@ class init_system(object):
         self._check_properties()
         return self._init_type_implementation.on_boot_disable(**kwargs)
    
-    def 
 
 class init_system_systemd():
 
@@ -303,7 +302,7 @@ class init_system_ubuntu_sysV():
 
 
 
-    def _get_sysvinit_name(self, **kwargs):
+    def _get_ubuntu_sysvinit_name(self, **kwargs):
         service = kwargs.get("service")
         if service == None:
             raise init_exception("service is None")
